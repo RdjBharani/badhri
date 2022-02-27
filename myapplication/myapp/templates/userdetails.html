@@ -1,0 +1,12 @@
+<html>
+    <body>
+        <form method="POST" action="/create_user/">
+            {% csrf_token %}
+            <input placeholder="Please enter the name" name="name"><br>
+            <input placeholder="Please enter the contact" name="contact"><br>
+            <input placeholder="Please enter the address" name="address"><br>
+            <input placeholder="Please give DOB" type="date" name="dob"><br>
+            <button type="submit" class="submit">Create</button><br>
+        </form>
+    </body>
+    </html>

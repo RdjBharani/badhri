@@ -16,3 +16,14 @@ class Manager(models.Model):
 
     class Meta:
         db_table = "manager"
+
+class UserDetails(models.Model):
+    name=models.CharField(max_length=50)
+    contact=models.CharField(max_length=10)
+    address=models.CharField(max_length=100)
+    dob=models.DateField()
+
+    def __str__(self):
+        return self.name
+    class Meta:
+        db_table="user_details"

@@ -1,6 +1,14 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse,redirect
+from django.contrib.auth import authenticate,login,logout
 from .forms import SignUp
+from .models import *
+from django.contrib.auth.decorators import login_required, user_passes_test
 
+def employee(user):
+    return user.role == 2
+
+def manager(user):
+    return user.role==1
 
 def signup(request):
     form = SignUp
@@ -24,3 +32,44 @@ def usersignup(request):
         form = SignUp
         return render(request,"signup_page.html", {'form':form})
         
+def loginpage(request):
+    return render(request,"login.html")
+
+def log(request):
+    if request.method == "POST":
+        xxx= request.POST.get('username')
+        yyy = request.POST.get('password')
+        user = authenticate(username=xxx, password=yyy)
+        if user:
+            request.session.set_expiry(100)
+            login(request, user)
+            request.session['username'] = xxx
+           
+            return render(request,'menu.html',{"username":user})
+        else:
+            return render(request, 'login.html')
+    else:
+        return render(request, 'login.html')
+    
+def log_out(request):
+    logout(request)
+    return redirect('/loginpage')
+
+@login_required()
+def creuser(request):
+    return render(request,"userdetails.html")
+
+@login_required()
+@user_passes_test(manager)
+def usercreate(request):
+    if request.method =="POST":
+        name=request.POST.get("name")
+        contact=request.POST.get("contact")
+        address=request.POST.get("address")
+        dob=request.POST.get("dob")
+        user_details=UserDetails(name=name,contact=contact,address=address,dob=dob)
+        user_details.save()
+        
+        return HttpResponse("user Created")
+    else:
+        return render(request,"userdetails.html")

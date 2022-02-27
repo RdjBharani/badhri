@@ -1,2 +1,12 @@
 <html>
-</html>
+  <title>Login Page</title>
+  <body>
+    <form method="POST" action="/home/">
+      {% csrf_token %}
+      <h3>SIGN IN</h3>
+      <input type="text" placeholder="USERNAME" name="username"><br>
+      <input type="password" placeholder="PASSWORD" name="password"><br>
+      <button type="submit" class="submit">LET'S GO</button><br>
+    </form>
+  </body>
+  </html>

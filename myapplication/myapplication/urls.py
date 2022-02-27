@@ -22,4 +22,9 @@ urlpatterns = [
     path("",views.signup),
     path("signup/", views.usersignup),
     path("menu/", views.menupage),
+    path("loginpage/", views.loginpage),
+    path("home/", views.log),
+    path("logout/", views.log_out),
+    path("createuser/", views.creuser),
+    path("create_user/", views.usercreate)
 ]

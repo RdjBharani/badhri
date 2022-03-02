@@ -9,3 +9,9 @@ class SignUp(UserCreationForm):
     class Meta:
         model = MyUser
         fields = ['first_name','last_name','username','email','password1','password2']
+        
+
+class Userdetails(forms.ModelForm):
+    class Meta:
+        model=UserDetails
+        fields="__all__"

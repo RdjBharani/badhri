@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse,redirect
 from django.contrib.auth import authenticate,login,logout
-from .forms import SignUp
+from .forms import SignUp, Userdetails
 from .models import *
 from django.contrib.auth.decorators import login_required, user_passes_test
 
@@ -41,7 +41,7 @@ def log(request):
         yyy = request.POST.get('password')
         user = authenticate(username=xxx, password=yyy)
         if user:
-            request.session.set_expiry(100)
+            request.session.set_expiry(6000)
             login(request, user)
             request.session['username'] = xxx
            
@@ -70,6 +70,38 @@ def usercreate(request):
         user_details=UserDetails(name=name,contact=contact,address=address,dob=dob)
         user_details.save()
         
-        return HttpResponse("user Created")
+        return redirect("/viewuser")
     else:
         return render(request,"userdetails.html")
+    
+@login_required()
+@user_passes_test(manager)
+def userview(request):
+    forms=UserDetails.objects.all()
+    return render(request,"viewuser.html",{"data":forms})
+
+@login_required()
+@user_passes_test(manager)
+def useredit(request, id):  
+    data = UserDetails.objects.get(id=id)  
+    return render(request,'edituser.html', {'form':data})  
+
+@login_required()
+@user_passes_test(manager)
+def userupdate(request, id):  
+    data=UserDetails.objects.get(id=id)  
+    form = Userdetails(request.POST,instance = data)
+    if form.is_valid():
+        form.save()  
+        user=UserDetails.objects.all()
+        return render(request,'viewuser.html',{'data':user})
+    return render(request, 'edituser.html', {'form': data})
+
+@login_required()
+@user_passes_test(manager)
+def userdelete(request,id):
+    data=UserDetails.objects.get(id=id)
+    data.delete()
+    user=UserDetails.objects.all()
+    return render(request,'viewuser.html',{'data':user})
+    
